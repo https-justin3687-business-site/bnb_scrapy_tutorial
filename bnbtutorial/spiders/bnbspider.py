@@ -34,7 +34,7 @@ class BnbSpider(scrapy.Spider):
     def parse_listing_contents(self, response):
         item = BnbtutorialItem()
 
-        json_array = response.xpath('//meta[@id="_bootstrap-room_options"]/@content').extract()
+        json_array = response.xpath('//a[@class="media-photo media-cover"]/@href').extract()
         if json_array:
             airbnb_json_all = json.loads(json_array[0])
             airbnb_json = airbnb_json_all['airEventData']
