@@ -10,7 +10,7 @@ class BnbSpider(scrapy.Spider):
     name = "bnbspider"
     allowed_domains = ["airbnb.com"]
     start_urls = (
-        'http://www.airbnb.com/s/'+QUERY,
+        'https://www.airbnb.com/s/'+QUERY,
     )
 
     def parse(self, response):
@@ -25,8 +25,9 @@ class BnbSpider(scrapy.Spider):
                                     callback=self.parse_listing_results_page)
 
 
+
     def parse_listing_results_page(self, response):
-        for href in response.xpath('//div[@class="listing"]/@data-url').extract():
+        for href in response.xpath('//a[@class="media-photo media-cover"]/@href').extract():
             url = response.urljoin(href)
             yield scrapy.Request(url, callback=self.parse_listing_contents)
 
@@ -34,7 +35,7 @@ class BnbSpider(scrapy.Spider):
     def parse_listing_contents(self, response):
         item = BnbtutorialItem()
 
-        json_array = response.xpath('//a[@class="media-photo media-cover"]/@href').extract()
+        json_array = response.xpath('//meta[@id="_bootstrap-room_options"]/@content').extract()
         if json_array:
             airbnb_json_all = json.loads(json_array[0])
             airbnb_json = airbnb_json_all['airEventData']
