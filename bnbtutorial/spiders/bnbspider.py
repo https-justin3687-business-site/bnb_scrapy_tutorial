@@ -21,7 +21,7 @@ class BnbSpider(scrapy.Spider):
             page_urls = [response.url + "?page=" + str(pageNumber)
                      for pageNumber in range(1, last_page_number + 1)]
             for page_url in page_urls:
-                yield scrapy.Request(page_url, 
+                yield scrapy.Request(page_url,
                                     callback=self.parse_listing_results_page)
 
 
@@ -55,14 +55,14 @@ class BnbSpider(scrapy.Spider):
             item['instant_book'] = airbnb_json['instant_book_possible']
             item['accuracy_rating'] = airbnb_json['accuracy_rating']
             item['response_time'] = airbnb_json['response_time_shown']
-            item['response_rate'] = airbnb_json['reponse_rate_shown']   
+            item['response_rate'] = airbnb_json['response_rate_shown']
             item['nightly_price'] = airbnb_json_all['nightly_price']
         item['url'] = response.url
         yield item
-    
+
 
     def last_pagenumer_in_search(self, response):
-        try:  # to get the last page number 
+        try:  # to get the last page number
             last_page_number = int(response
                                    .xpath('//ul[@class="list-unstyled"]/li[last()-1]/a/@href')
                                    .extract()[0]
@@ -78,7 +78,7 @@ class BnbSpider(scrapy.Spider):
                 logging.log(logging.DEBUG, 'No results on page' + response.url)
                 return 0
             else:
-            # otherwise we can conclude that the page 
+            # otherwise we can conclude that the page
             # has results but that there is only one page.
                 return 1
 
