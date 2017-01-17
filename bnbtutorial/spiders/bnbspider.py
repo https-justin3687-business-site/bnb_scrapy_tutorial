@@ -8,9 +8,9 @@ QUERY = 'Lucca--Italy'
 # class BnbspiderSpider(scrapy.Spider):
 class BnbSpider(scrapy.Spider):
     name = "bnbspider"
-    # allowed_domains = ["airbnb.com"]
+    allowed_domains = ["airbnb.com", "airbnb.co.uk"]
     start_urls = (
-        'https://www.airbnb.com/s/'+QUERY,
+        'https://www.airbnb.co.uk/s/'+QUERY,
     )
 
     def parse(self, response):
