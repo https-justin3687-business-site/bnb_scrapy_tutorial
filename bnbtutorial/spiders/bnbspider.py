@@ -27,7 +27,7 @@ class BnbSpider(scrapy.Spider):
 
 
     def parse_listing_results_page(self, response):
-        for href in response.xpath('//a[@class="media-photo media-cover"]/@href').extract():
+        for href in response.xpath('//div[1]/div[3]/a/@href').extract():
             url = response.urljoin(href)
             yield scrapy.Request(url, callback=self.parse_listing_contents)
 
