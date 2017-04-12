@@ -10,8 +10,6 @@ import scrapy
 class BnbtutorialItem(scrapy.Item):
     rev_count = scrapy.Field()
     amenities = scrapy.Field()
-    host_id = scrapy.Field()
-    hosting_id = scrapy.Field()
     room_type = scrapy.Field()
     price = scrapy.Field()
     bed_type = scrapy.Field()
@@ -25,5 +23,4 @@ class BnbtutorialItem(scrapy.Item):
     accuracy_rating = scrapy.Field()
     response_time = scrapy.Field()
     response_rate  = scrapy.Field()
-    nightly_price = scrapy.Field()
     url = scrapy.Field()

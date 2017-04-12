@@ -14,12 +14,12 @@ class BnbSpider(scrapy.Spider):
     )
 
     def parse(self, response):
-        last_page_number = self.last_pagenumer_in_search(response)
+        last_page_number = 17
         if last_page_number < 1:
             return
         else:
-            page_urls = [response.url + "?page=" + str(pageNumber)
-                     for pageNumber in range(1, last_page_number + 1)]
+            page_urls = [response.url + "?section_offset=" + str(pageNumber)
+                     for pageNumber in range(last_page_number)]
             for page_url in page_urls:
                 yield scrapy.Request(page_url,
                                     callback=self.parse_listing_results_page)
@@ -27,7 +27,8 @@ class BnbSpider(scrapy.Spider):
 
 
     def parse_listing_results_page(self, response):
-        for href in response.xpath('//div[1]/div[3]/a/@href').extract():
+        room_url_parts = set(response.xpath('//div/a[contains(@href,"rooms")]/@href').extract())
+        for href in list(room_url_parts):
             url = response.urljoin(href)
             yield scrapy.Request(url, callback=self.parse_listing_contents)
 
@@ -41,8 +42,6 @@ class BnbSpider(scrapy.Spider):
             airbnb_json = airbnb_json_all['airEventData']
             item['rev_count'] = airbnb_json['visible_review_count']
             item['amenities'] = airbnb_json['amenities']
-            item['host_id'] = airbnb_json_all['hostId']
-            item['hosting_id'] = airbnb_json['hosting_id']
             item['room_type'] = airbnb_json['room_type']
             item['price'] = airbnb_json['price']
             item['bed_type'] = airbnb_json['bed_type']
@@ -56,7 +55,6 @@ class BnbSpider(scrapy.Spider):
             item['accuracy_rating'] = airbnb_json['accuracy_rating']
             item['response_time'] = airbnb_json['response_time_shown']
             item['response_rate'] = airbnb_json['response_rate_shown']
-            item['nightly_price'] = airbnb_json_all['nightly_price']
         item['url'] = response.url
         yield item
 
@@ -64,13 +62,14 @@ class BnbSpider(scrapy.Spider):
     def last_pagenumer_in_search(self, response):
         try:  # to get the last page number
             last_page_number = int(response
-                                   .xpath('//ul[@class="list-unstyled"]/li[last()-1]/a/@href')
+            					   .xpath('//ul[@class="list-unstyled"]/li[last()-1]/a/@href')
                                    .extract()[0]
-                                   .split('page=')[1]
+                                   .split('section_offset=')[1]
                                    )
+            print(response.xpath('//ul[@class="list-unstyled"]/li[last()-1]/a/@href'))
             return last_page_number
 
-        except IndexError:  # if there is no page number
+        except KeyError:  # if there is no page number
             # get the reason from the page
             reason = response.xpath('//p[@class="text-lead"]/text()').extract()
             # and if it contains the key words set last page equal to 0
