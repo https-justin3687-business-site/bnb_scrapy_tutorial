@@ -5,6 +5,6 @@ If you are looking for the original post follows [this link](http://www.verginer
 
 # UPDATE 18-04-2018
 
-Airbnb has changed as lot since I have written this tutorial and will not work out of the gate.
+Airbnb has changed a lot since I have written this tutorial and therefore this code will not work without major modifications.
 Fortunately @bashedev has done a nice job to keep up with the changes and offers a working example.
-you can find his repo here: https://github.com/bashedev/airbnb_scraper
+You can find his awsome code herere: https://github.com/bashedev/airbnb_scraper
